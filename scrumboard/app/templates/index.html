@@ -1,0 +1,26 @@
+<!doctype html>
+<html ng-app="scrumboardApp">
+  <head>
+    <title>Scrumboard</title>
+    <script src="../static/bower_components/angular/angular.js"></script>
+    <script src="../static/js/app.js"></script>
+  </head>
+
+  <body ng-controller="scrumboardController">
+    <h1>{a title a}</h1>
+  </body>
+    <section>
+      <form ng-submit="addList()">
+        Name: <input name="name" type="text" ng-model="newList.name"/>
+        <input type="submit" value="Add" />
+    </section>
+
+    <section>
+      <h2>Lists</h2>
+      <div ng-repeat="list in lists">
+        <span>
+          {a list.name a}
+          <button type="button" ng-click="deleteList(list)">Delete</a>
+        </span>
+    </section>
+</html>
