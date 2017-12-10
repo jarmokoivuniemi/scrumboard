@@ -8,19 +8,29 @@
 
   <body ng-controller="scrumboardController">
     <h1>{a title a}</h1>
-  </body>
     <section>
       <form ng-submit="addList()">
         Name: <input name="name" type="text" ng-model="newList.name"/>
         <input type="submit" value="Add" />
+      </form>
     </section>
 
     <section>
       <h2>Lists</h2>
-      <div ng-repeat="list in lists">
-        <span>
-          {a list.name a}
-          <button type="button" ng-click="deleteList(list)">Delete</a>
-        </span>
+      <div class="list" ng-repeat="list in lists">
+          <h3> {a list.name a} </h3>
+          <button type="button" ng-click="deleteList(list)">Delete list</button>
+          <ul>
+            <li ng-repeat="card in list.cards">
+              {a card.title a} <br>
+              {a card.description a} <br>
+            </li>
+          </ul>
+          <div class="flex">
+              <input type="text" ng-model="newTitle"/>
+              <button ng-click="addCard(list, newTitle)">+</button>
+          </div>
+      </div>
     </section>
+  </body>
 </html>

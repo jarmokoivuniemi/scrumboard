@@ -14,7 +14,7 @@ describe('Scrumboard', function() {
     function addList(name) {
         var list = {
           name : name,
-          cards : []
+          cards : undefined
         };
         scope.newList = list
         scope.addList()
@@ -40,6 +40,8 @@ describe('Scrumboard', function() {
 
         expect(scope.lists.length).toBe(1);
         expect(scope.lists[0].name).toBe('TODO');
+        expect(scope.lists[0].cards).toEqual([]);
+
       });
     });
 
@@ -52,28 +54,23 @@ describe('Scrumboard', function() {
         expect(scope.lists.length).toBe(0);
 
       });
-      
     });
 
-    describe('add card to list', function() {
+    describe('add two cards to list', function() {
       it('should have card inside list', function() {
-        var list = addList('TODO');
-        var card = {
-          title: 'TDD AngularJS',
-          description: '...or die trying'
-        };
 
-        scope.newCard = card;
+        addList('TODO');
+        addList('Doing');
 
-        scope.addCard(scope.lists[0]);
+        scope.addCard(scope.lists[0], 'TDD AngularJS');
+        scope.addCard(scope.lists[1], 'Find bugs in HTML');
 
         expect(scope.lists[0].cards.length).toBe(1);
         expect(scope.lists[0].cards[0].title).toBe('TDD AngularJS');
-        expect(scope.lists[0].cards[0].description).toBe('...or die trying');
-
+        expect(scope.lists[1].cards.length).toBe(1);
+        expect(scope.lists[1].cards[0].title).toBe('Find bugs in HTML');
 
       });
-      
     });
 
   });
