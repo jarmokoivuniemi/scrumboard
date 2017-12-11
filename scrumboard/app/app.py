@@ -1,10 +1,27 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
+
+lists = [
+        {
+            'name': 'TODO',
+            'cards': [
+                {
+                    'title': 'TDD AngularJS',
+                    'description': '...or die trying',
+                    'list': 'TODO',
+                }
+                ]
+        },
+        ]
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/lists')
+def get_listts():
+    return jsonify(lists)
 
 
 if __name__ == '__main__':
