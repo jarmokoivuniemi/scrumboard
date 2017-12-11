@@ -67,8 +67,10 @@ describe('Scrumboard', function() {
 
         expect(scope.lists[0].cards.length).toBe(1);
         expect(scope.lists[0].cards[0].title).toBe('TDD AngularJS');
+        expect(scope.lists[0].cards[0].list.name).toBe('TODO');
         expect(scope.lists[1].cards.length).toBe(1);
         expect(scope.lists[1].cards[0].title).toBe('Find bugs in HTML');
+        expect(scope.lists[1].cards[0].list.name).toBe('Doing');
 
       });
     });

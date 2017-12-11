@@ -18,12 +18,30 @@
     <section>
       <h2>Lists</h2>
       <div class="list" ng-repeat="list in lists">
-          <h3> {a list.name a} </h3>
-          <button type="button" ng-click="deleteList(list)">Delete list</button>
+          <h3> {a list.name a}
+          <button type="button" ng-click="deleteList(list)">delete</button>
+          </h3>
           <ul>
             <li ng-repeat="card in list.cards">
-              {a card.title a} <br>
-              {a card.description a} <br>
+              <div class="card" ng-hide="edit" ng-click="edit=true">
+                <h4> {a card.title a} </h4>
+                <span class="description"> {a card.description a} </span>
+              </div>
+
+              <div class="card" ng-show="edit" 
+                                ng-model-options="modelOptions">
+                <div class="flex">
+                  <label><strong>Title:&nbsp;</label>
+                  <input type="text"
+                         ng-model="card.title" 
+                         ng-change="update()" />
+                </div>
+                <textarea ng-model="card.description"
+                          ng-change="update()" 
+                          placeholder="Enter description.." ></textarea>
+                <button ng-click="edit=false">Close</button>
+                <button ng-click="delete()">Delete</button>
+              </div>
             </li>
           </ul>
           <div class="flex">

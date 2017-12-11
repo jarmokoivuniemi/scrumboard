@@ -36,7 +36,8 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope) {
     var index = $scope.lists.indexOf(list);
     $scope.lists[index].cards.push({
       title : newTitle,
-      description : ""
+      description : "",
+      list: list
     });
   };
 });
