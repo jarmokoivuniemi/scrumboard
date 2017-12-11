@@ -1,9 +1,11 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+.env
 .pydevproject
 .cache/
 .gitignore.swp
 *.swp
 *.pyc
+lib/
 geckodriver.log
 tags
