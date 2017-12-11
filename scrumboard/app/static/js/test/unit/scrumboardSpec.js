@@ -46,8 +46,8 @@ describe('Scrumboard', function() {
 
       it('should not be able to add list with same name twice', function() {
         spyOn(window, 'alert');
-        addList('BODOM');
-        addList('BODOM');
+        addList('duplicate');
+        addList('duplicate');
         expect(scope.lists.length).toBe(1);
         expect(window.alert).toHaveBeenCalledWith("Can't add duplicate");
 
@@ -65,12 +65,24 @@ describe('Scrumboard', function() {
       });
     });
 
-    describe('add two cards to list', function() {
-      it('should have card inside list', function() {
+    describe('adding and deleting cards', function() {
 
+      beforeEach(function() {
         addList('TODO');
         addList('Doing');
+      });
 
+      it('should not be possible to give empty title', function() {
+        spyOn(window, 'alert');
+
+        scope.addCard('TODO', '');
+
+        expect(scope.lists[0].cards.length).toBe(0);
+        expect(window.alert).toHaveBeenCalledWith("Add title to your card");
+
+      });
+
+      it('should have card inside list', function() {
         scope.addCard('TODO', 'TDD AngularJS');
         scope.addCard('Doing', 'Find bugs in HTML');
 
@@ -82,18 +94,13 @@ describe('Scrumboard', function() {
         expect(scope.lists[1].cards[0].list).toBe('Doing');
 
       });
-    });
 
-    describe('delete card', function() {
       it('should delete card', function() {
-
-        addList('TODO');
         scope.addCard(scope.lists[0].name, 'TDD AngularJS');
 
         scope.deleteCard(scope.lists[0].cards[0]);
 
         expect(scope.lists[0].cards.length).toBe(0);
-
 
       });
     });

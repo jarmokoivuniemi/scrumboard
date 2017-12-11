@@ -42,6 +42,10 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   $scope.addCard = function(listName, newTitle) {
+    if(!newTitle) {
+      alert('Add title to your card');
+      return;
+    }
     var index = getListIndexByName(listName);
     $scope.lists[index].cards.push({
       title : newTitle,
