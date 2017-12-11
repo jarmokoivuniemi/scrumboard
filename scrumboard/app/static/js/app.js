@@ -60,6 +60,13 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
     $scope.lists[listIndex].cards.splice(cardIndex, 1);
   };
 
+  $scope.moveCard = function(card, listName) {
+    $scope.deleteCard(card);
+    card.list = listName;
+    var index = getListIndexByName(listName);
+    $scope.lists[index].cards.push(card);
+  };
+
   function getListIndex(list) {
     return $scope.lists.indexOf(list);
   };

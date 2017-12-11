@@ -39,6 +39,11 @@
                 <textarea ng-model="card.description"
                           ng-change="update()" 
                           placeholder="Enter description.." ></textarea>
+                <select ng-init="selectedList = $scope.lists[0]"
+                        ng-model="selectedList" 
+                        ng-options="listOption.name for listOption in lists" 
+                        ng-change="moveCard(card, selectedList.name)"></select>
+
                 <button ng-click="edit=false">Close</button>
                 <button ng-click="deleteCard(card)">Delete</button>
               </div>

@@ -10,7 +10,17 @@ lists = [
                     'title': 'TDD AngularJS',
                     'description': '...or die trying',
                     'list': 'TODO',
+                },
+                {
+                    'title': 'Fix HTML',
+                    'description': '...or die trying',
+                    'list': 'TODO',
                 }
+                ]
+        },
+        {
+            'name': 'Doing',
+            'cards': [
                 ]
         },
         ]
