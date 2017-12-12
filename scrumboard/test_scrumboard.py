@@ -36,12 +36,14 @@ class TestScrumboard(unittest.TestCase):
         response = self.client().post('/scrumboard_api/', data=json.dumps(example_list), content_type='application/json')
         self.assertEqual(201, response.status_code)
         self.assertIn('TODO', str(response.data))
+        self.assertIn('TDD', str(response.data))
 
     def test_fetch_lists(self):
         self.client().post('/scrumboard_api/', data=json.dumps(example_list), content_type='application/json')
         response = self.client().get('/scrumboard_api/')
         self.assertEqual(200, response.status_code)
         self.assertIn('TODO', str(response.data))
+        self.assertIn('TDD', str(response.data))
 
 if __name__ == '__main__':
     unittest.main()

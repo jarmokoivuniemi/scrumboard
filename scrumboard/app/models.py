@@ -1,14 +1,11 @@
 from app import db
-
+from sqlalchemy.orm import joinedload
 
 class List(db.Model):
-    __tablename__ = 'lists'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255))
-
-    def __init__(self, name):
-        self.name = name
+    name = db.Column(db.String(255), primary_key=True)
+    cards = db.relationship('Card',
+            backref='list',
+            lazy='dynamic')
 
     def save(self):
         db.session.add(self)
@@ -24,12 +21,14 @@ class List(db.Model):
 
 
 class Card(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
+    title = db.Column(db.String(255), primary_key=True)
     description = db.Column(db.String(255))
+    list_name = db.Column(db.String(255), db.ForeignKey('list.name'), nullable=False)
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, title, description, list_name):
+        self.title = title
+        self.description = description
+        self.list_name = list_name
 
     def save(self):
         db.session.add(self)
@@ -37,14 +36,11 @@ class Card(db.Model):
 
     @staticmethod
     def get_all():
-        return List.query.all()
+        return Card.query.all()
 
     def delete(self):
         db.session.delete(self)
         db.session.commit()
 
-
-
-
     def __repr__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.title)
