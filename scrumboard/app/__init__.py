@@ -28,6 +28,7 @@ def create_app(config_name):
                        title=card['title'], 
                        description=card['description'], 
                        list=scrumlist))
+
                scrumlist.save()
 
                response = jsonify({'name': scrumlist.name, 'cards': get_cards(scrumlist)})
@@ -35,7 +36,7 @@ def create_app(config_name):
                return response
         else:
             lists = List.get_all()
-            response = jsonify([{'name': l.name, 'cards': [str(card) for card in l.cards]} for l in lists])
+            response = jsonify([{'name': l.name, 'cards': get_cards(l)} for l in lists])
             response.status_code = 200
             return response
 
