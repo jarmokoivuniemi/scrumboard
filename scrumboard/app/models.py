@@ -20,7 +20,7 @@ class List(db.Model):
 class Card(db.Model):
     title = db.Column(db.String(255), primary_key=True)
     description = db.Column(db.String(255))
-    list_name = db.Column(db.String(50), db.ForeignKey('list.name'), nullable=False)
+    list_name = db.Column(db.String(50), db.ForeignKey('list.name'), nullable=True)
     list = db.relationship('List',
             backref=db.backref('cards', lazy=True))
 

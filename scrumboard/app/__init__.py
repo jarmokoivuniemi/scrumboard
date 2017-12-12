@@ -39,6 +39,43 @@ def create_app(config_name):
             response.status_code = 200
             return response
 
+    @app.route('/scrumboard_api/<list_name>', methods=['GET'])
+    def get_list(list_name):
+        scrumlist = List.query.filter_by(name=list_name).first()
+        response = jsonify({'name': scrumlist.name, 'cards': get_cards(scrumlist)})
+        response.status_code = 200
+        return response
+
+
+    @app.route('/scrumboard_api/<list_name>', methods=['DELETE'])
+    def delete_list(list_name):
+        scrumlist = List.query.filter_by(name=list_name).first()
+        scrumlist.delete()
+        response = jsonify({'message': 'deleted list {}'.format(list_name)})
+        response.status_code = 200
+        return response
+
+    @app.route('/scrumboard_api/<list_name>', methods=['PUT'])
+    def add_card(list_name):
+        scrumlist = List.query.filter_by(name=list_name).first()
+        data = request.data
+        scrumlist.cards.append(Card(title=data['title'], description=data['description'], list=scrumlist))
+        scrumlist.save()
+        response = jsonify({'name': scrumlist.name, 'cards': get_cards(scrumlist)})
+        response.status_code = 200
+        return response
+
+
+    @app.route('/scrumboard_api/cards/<card_title>', methods=['DELETE'])
+    def delete_card(card_title):
+        scrumcard = Card.query.filter_by(title=card_title).first()
+        scrumlist = List.query.filter_by(name=request.data['list']).first()
+        scrumlist.cards.remove(scrumcard)
+        scrumlist.save()
+        response = jsonify({'message': 'deleted card {}'.format(card_title)})
+        response.status_code = 200
+        return response
+
 
 
 
