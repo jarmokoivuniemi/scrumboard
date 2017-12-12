@@ -1,7 +1,22 @@
 import unittest
 import os
 import json
-from app import create_app, db
+from app import create_app, db, jsonify
+example_list = {
+        'name': 'TODO',
+        'cards': [
+            {
+                'title': 'TDD AngularJS',
+                'description': '...or die trying',
+                'list': 'TODO',
+                },
+            {
+                'title': 'Fix HTML',
+                'description': '...or die trying',
+                'list': 'TODO',
+                }
+            ]
+        }
 
 class TestScrumboard(unittest.TestCase):
     
@@ -18,23 +33,15 @@ class TestScrumboard(unittest.TestCase):
             db.drop_all()
 
     def test_list_creation(self):
-        l = {
-            'name': 'TODO',
-            'cards': [
-                {
-                    'title': 'TDD AngularJS',
-                    'description': '...or die trying',
-                    'list': 'TODO',
-                },
-                {
-                    'title': 'Fix HTML',
-                    'description': '...or die trying',
-                    'list': 'TODO',
-                }
-                ]
-            }
-        result = self.client().post('/scrumboard_api/', data=json.dumps(l))
-        self.assertEqual(200, result.status_code)
+        response = self.client().post('/scrumboard_api/', data=json.dumps(example_list), content_type='application/json')
+        self.assertEqual(201, response.status_code)
+        self.assertIn('TODO', str(response.data))
+
+    def test_fetch_lists(self):
+        self.client().post('/scrumboard_api/', data=json.dumps(example_list), content_type='application/json')
+        response = self.client().get('/scrumboard_api/')
+        self.assertEqual(200, response.status_code)
+        self.assertIn('TODO', str(response.data))
 
 if __name__ == '__main__':
     unittest.main()
