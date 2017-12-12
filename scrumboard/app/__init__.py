@@ -6,6 +6,9 @@ from instance.config import app_config
 
 db = SQLAlchemy()
 
+def get_cards(scrumlist):
+    return [str(card) for card in scrumlist.cards]
+
 def create_app(config_name):
     app = FlaskAPI(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
@@ -19,19 +22,15 @@ def create_app(config_name):
         if request.method == 'POST':
             name = str(request.data.get('name', ''))
             if name:
-               response = {}
-               response['cards'] = []
                scrumlist = List(name=name)
-               response['name'] = scrumlist.name
                for card in request.data.get('cards', []):
-                   scrumcard = Card(title=card['title'], description=card['description'], list=scrumlist)
-                   scrumlist.cards.append(scrumcard)
-                   response['cards'].append({
-                       'title': scrumcard.title,
-                       'description': scrumcard.description
-                       })
+                   scrumlist.cards.append(Card(
+                       title=card['title'], 
+                       description=card['description'], 
+                       list=scrumlist))
                scrumlist.save()
-               response = jsonify(response)
+
+               response = jsonify({'name': scrumlist.name, 'cards': get_cards(scrumlist)})
                response.status_code = 201
                return response
         else:

@@ -24,14 +24,6 @@ class Card(db.Model):
     list = db.relationship('List',
             backref=db.backref('cards', lazy=True))
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @staticmethod
-    def get_all():
-        return Card.query.all()
-
     def delete(self):
         db.session.delete(self)
         db.session.commit()
