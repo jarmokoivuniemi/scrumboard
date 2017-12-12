@@ -35,8 +35,7 @@ def create_app(config_name):
                response.status_code = 201
                return response
         else:
-            lists = List.get_all()
-            response = jsonify([{'name': l.name, 'cards': get_cards(l)} for l in lists])
+            response = jsonify([{'name': l.name, 'cards': get_cards(l)} for l in List.get_all()])
             response.status_code = 200
             return response
 
