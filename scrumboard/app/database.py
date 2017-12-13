@@ -38,3 +38,6 @@ class Database:
 
     def find_list_by_name(self, list_name):
         return next(l for l in self.lists if l['name'] == list_name)
+
+    def drop_all(self):
+        self.lists = []
