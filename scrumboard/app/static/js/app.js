@@ -25,14 +25,19 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   $scope.addList = function() {
-    if(!listExists()) {
-      $scope.lists.push({
-        name: $scope.newList.name,
-        cards: []
-      });
+    if(isValidList()) {
+      list = {
+          name: $scope.newList.name,
+          cards: []
+      };
+      $http.post('/api/lists', list).then(function(response) {
+        $scope.lists.push(response.data)
+        });
+      //$scope.lists.push(list);
+
     }
     else {
-      alert("Can't add duplicate");
+      cannotAddList();
     }
   };
 
@@ -81,5 +86,16 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
     return $scope.lists.filter(function(list) {
       return list.name === $scope.newList.name;
     }).length > 0;
+  };
+
+  function isValidList() {
+    return !listExists() && $scope.newList.name
+  };
+
+  function cannotAddList() {
+  if(listExists())
+    alert("Can't add duplicate");
+  else if(!$scope.newList.name)
+    alert("Add name to your list");
   };
 });

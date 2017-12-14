@@ -17,8 +17,7 @@ def get_lists():
 @app.route('/api/lists', methods=['POST'])
 def post_list():
     db.add_list(request.get_json())
-    response = jsonify(db.get_lists())
-    return response
+    return request.data
 
 @app.route('/api/lists/<list_name>', methods=['GET'])
 def get_one_list(list_name):
