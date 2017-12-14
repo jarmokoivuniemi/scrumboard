@@ -63,7 +63,7 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   $scope.deleteCard = function(card) {
-    $http.delete('/api/cards/'+card.title, card).then(function() {
+    $http.delete('/api/cards/'+card.title).then(function() {
       var listIndex = getListIndexByName(card.list);
       var cardIndex = $scope.lists[listIndex].cards.indexOf(card);
       $scope.lists[listIndex].cards.splice(cardIndex, 1);

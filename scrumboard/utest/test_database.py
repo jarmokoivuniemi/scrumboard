@@ -53,7 +53,7 @@ class TestDatabase(TestCase):
         
         self.add_card_to_list(self.sample_card1)
 
-        self.db.delete_card(self.sample_card1)
+        self.db.delete_card(self.sample_card1['title'])
 
         assert_equal(0, len(self.db.get_cards_by_list('List name')),
                 'then list should have no cards')

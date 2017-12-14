@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, abort
 from database import Database
 import json
 
@@ -35,15 +35,18 @@ def post_card():
     db.add_card(request.get_json())
     return jsonify(request.get_json())
 
-@app.route('/api/cards/<card_name>', methods=['PUT'])
-def move_card(card_name):
+@app.route('/api/cards/<card_title>', methods=['PUT'])
+def move_card(card_title):
     db.move_card(request.get_json())
     return jsonify({})
 
-@app.route('/api/cards/<card_name>', methods=['DELETE'])
-def delete_card(card_name):
-    print(request.get_json())
-    db.delete_card(request.get_json())
+@app.route('/api/cards/<card_title>', methods=['GET'])
+def get_card(card_title):
+    return jsonify({})
+
+@app.route('/api/cards/<card_title>', methods=['DELETE'])
+def delete_card(card_title):
+    db.delete_card(card_title)
     return jsonify({})
 
 

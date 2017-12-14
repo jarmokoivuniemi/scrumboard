@@ -19,9 +19,12 @@ class Database:
         target_list = next(l for l in self.lists if new_card['list'] == l['name'])
         target_list['cards'].append(new_card)
 
-    def delete_card(self, card):
-        target_list = next(l for l in self.lists if card['list'] == l['name'])
-        target_list['cards'].remove(card)
+    def delete_card(self, card_title):
+        card, card_list = next((c, l) 
+                for l in self.lists 
+                for c in l['cards'] 
+                if card_title == c['title'])
+        card_list['cards'].remove(card)
 
     def move_card(self, card):
         target_card, old_list = next((c, l) 

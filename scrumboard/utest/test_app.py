@@ -102,9 +102,9 @@ class TestApp(TestCase):
         db.add_list(self.sample_list1)
         db.add_card(self.sample_card1)
 
-        self.client.delete('/api/cards/Card title',
-                data=json.dumps(self.sample_card1),
-                content_type='application/json')
+        delete_response = self.client.delete('/api/cards/Card title')
+
+        assert_equal(200, delete_response.status_code)
 
         response = self.client.get('/api/lists/List name')
         assert_not_in('Card title', str(response.data))
