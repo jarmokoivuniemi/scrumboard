@@ -3,7 +3,7 @@ sys.path.append(os.path.realpath('app/'))
 from app.app import app
 from app.app import db
 from unittest import TestCase
-from nose.tools import assert_equal, assert_true, assert_in
+from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
 import json
 
 class TestApp(TestCase):
@@ -50,6 +50,17 @@ class TestApp(TestCase):
         assert_equal(200, response.status_code)
         assert_in('List name', str(response.data))
 
+    def test_delete_list(self):
+        self.post('/api/lists', self.sample_list1)
+
+        delete_response = self.client.delete('/api/lists/List name');
+
+        assert_equal(204, delete_response.status_code)
+
+        get_response = self.client.get('/api/lists')
+
+        assert_not_in('List name', str(get_response.data))
+
     def test_get_one_list(self):
         self.post('/api/lists', self.sample_list1)
 
@@ -78,10 +89,11 @@ class TestApp(TestCase):
                 'list': 'Another list',
                 }
 
-        response = self.client.put('/api/cards/Card title', data=json.dumps(changed_card), content_type='application/json')
+        response = self.client.put('/api/cards/Card title', 
+                data=json.dumps(changed_card), 
+                content_type='application/json')
         assert_equal(200, response.status_code)
 
         response = self.client.get('/api/lists/Another list')
 
         assert_in('Card title', str(response.data))
-

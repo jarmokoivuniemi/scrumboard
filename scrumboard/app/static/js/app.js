@@ -33,8 +33,6 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
       $http.post('/api/lists', list).then(function(response) {
         $scope.lists.push(response.data)
         });
-      //$scope.lists.push(list);
-
     }
     else {
       cannotAddList();
@@ -42,8 +40,10 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   $scope.deleteList = function(listToDelete) {
-    var index = getListIndex(listToDelete);
-    $scope.lists.splice(index, 1);
+    $http.delete('/api/lists/'+listToDelete.name, listToDelete).then(function(response) {
+      var index = getListIndex(listToDelete);
+      $scope.lists.splice(index, 1);
+    });
   };
 
   $scope.addCard = function(listName, newTitle) {

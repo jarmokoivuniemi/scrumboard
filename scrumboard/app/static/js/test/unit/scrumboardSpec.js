@@ -13,6 +13,7 @@ describe('Scrumboard', function() {
       httpMock.when('GET', '/api/lists')
         .respond([]);
       testPost = httpMock.whenPOST('/api/lists');
+      httpMock.when('DELETE', '/api/lists/TODO').respond({});
     }));
 
     function addList(name, skip) {
@@ -87,7 +88,10 @@ describe('Scrumboard', function() {
       it('should have no list', function() {
         var list = addList('TODO');
 
+        httpMock.expectDELETE('/api/lists/TODO');
         scope.deleteList(list);
+
+        httpMock.flush();
 
         expect(scope.lists.length).toBe(0);
 

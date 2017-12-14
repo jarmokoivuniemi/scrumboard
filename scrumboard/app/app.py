@@ -19,6 +19,13 @@ def post_list():
     db.add_list(request.get_json())
     return request.data
 
+@app.route('/api/lists/<list_name>', methods=['DELETE'])
+def delete_list(list_name):
+    db.delete_list(list_name)
+    response = jsonify({})
+    response.status_code = 204
+    return response
+
 @app.route('/api/lists/<list_name>', methods=['GET'])
 def get_one_list(list_name):
     return jsonify(db.find_list_by_name(list_name))
