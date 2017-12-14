@@ -51,18 +51,23 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
       alert('Add title to your card');
       return;
     }
-    var index = getListIndexByName(listName);
-    $scope.lists[index].cards.push({
+    card = {
       title : newTitle,
       description : "",
       list: listName
+    }
+    $http.post('/api/cards', card).then(function(response) {
+      var index = getListIndexByName(listName);
+      $scope.lists[index].cards.push(response.data);
     });
   };
 
   $scope.deleteCard = function(card) {
-    var listIndex = getListIndexByName(card.list);
-    var cardIndex = $scope.lists[listIndex].cards.indexOf(card);
-    $scope.lists[listIndex].cards.splice(cardIndex, 1);
+    $http.delete('/api/cards/'+card.title, card).then(function() {
+      var listIndex = getListIndexByName(card.list);
+      var cardIndex = $scope.lists[listIndex].cards.indexOf(card);
+      $scope.lists[listIndex].cards.splice(cardIndex, 1);
+    });
   };
 
   $scope.moveCard = function(card, listName) {

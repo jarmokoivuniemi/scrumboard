@@ -33,12 +33,17 @@ def get_one_list(list_name):
 @app.route('/api/cards', methods=['POST'])
 def post_card():
     db.add_card(request.get_json())
-    response = jsonify(db.get_lists())
-    return response
+    return jsonify(request.get_json())
 
 @app.route('/api/cards/<card_name>', methods=['PUT'])
 def move_card(card_name):
     db.move_card(request.get_json())
+    return jsonify({})
+
+@app.route('/api/cards/<card_name>', methods=['DELETE'])
+def delete_card(card_name):
+    print(request.get_json())
+    db.delete_card(request.get_json())
     return jsonify({})
 
 
