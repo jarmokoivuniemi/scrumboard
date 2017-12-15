@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.realpath('app/'))
-from app.app import app
-from app.app import db
+from app.app import create_app
+from app.database import Database
 from unittest import TestCase
 from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
 import json
@@ -9,7 +9,8 @@ import json
 class TestApp(TestCase):
     
     def setUp(self):
-        self.client = app.test_client()
+        self.db = Database()
+        self.client = create_app(self.db).test_client()
         self.sample_list1 = {
                 'name': 'List name',
                 'cards': []
@@ -23,7 +24,7 @@ class TestApp(TestCase):
                 'description': 'Card description',
                 'list': 'List name',
                 }
-        db.drop_all()
+        self.db.drop_all()
 
     def post(self, route, item):
         response = self.client.post(route, 
@@ -32,8 +33,8 @@ class TestApp(TestCase):
         return response
         
     def test_get_lists(self):
-        db.add_list(self.sample_list1)
-        db.add_card(self.sample_card1)
+        self.db.add_list(self.sample_list1)
+        self.db.add_card(self.sample_card1)
 
         response = self.client.get('/api/lists')
 
@@ -69,7 +70,7 @@ class TestApp(TestCase):
         assert_in('List name', str(response.data))
 
     def test_post_card(self):
-        db.add_list(self.sample_list1)
+        self.db.add_list(self.sample_list1)
 
         self.post('/api/cards', self.sample_card1)
 
@@ -79,9 +80,9 @@ class TestApp(TestCase):
         assert_in('List name' and 'Card title', str(response.data))
 
     def test_move_card(self):
-        db.add_list(self.sample_list1)
-        db.add_list(self.sample_list2)
-        db.add_card(self.sample_card1)
+        self.db.add_list(self.sample_list1)
+        self.db.add_list(self.sample_list2)
+        self.db.add_card(self.sample_card1)
 
         changed_card = {
                 'title': 'Card title',
@@ -99,8 +100,8 @@ class TestApp(TestCase):
         assert_in('Card title', str(response.data))
 
     def test_delete_card(self):
-        db.add_list(self.sample_list1)
-        db.add_card(self.sample_card1)
+        self.db.add_list(self.sample_list1)
+        self.db.add_card(self.sample_card1)
 
         delete_response = self.client.delete('/api/cards/Card title')
 
