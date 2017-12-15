@@ -94,15 +94,11 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   function getListIndexByName(listName) {
-    return $scope.lists.indexOf($scope.lists.filter(function(list) {
-      return list.name == listName;
-    })[0]);
+    return $scope.lists.indexOf($scope.lists.filter(list => list.name == listName)[0]);
   };
 
   function listExists() {
-    return $scope.lists.filter(function(list) {
-      return list.name === $scope.newList.name;
-    }).length > 0;
+    return $scope.lists.filter(list => list.name == $scope.newList.name).length > 0;
   };
 
   function isValidList() {
