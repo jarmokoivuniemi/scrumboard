@@ -14,18 +14,13 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
     $scope.lists = response.data;
   });
 
-  $scope.newCard = {
-    title: undefined,
-    description: undefined
-  };
-
   $scope.newList = {
     name: undefined,
     cards: []
   };
 
   $scope.addList = function() {
-    if(isValidList()) {
+    if(isNewListValid()) {
       list = {
           name: $scope.newList.name,
           cards: []
@@ -101,7 +96,7 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
     return $scope.lists.filter(list => list.name == $scope.newList.name).length > 0;
   };
 
-  function isValidList() {
+  function isNewListValid() {
     return !listExists() && $scope.newList.name
   };
 
