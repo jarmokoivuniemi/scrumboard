@@ -20,7 +20,7 @@ describe('Scrumboard', function() {
 
     }));
 
-    function addList(name, skip) {
+    function postList(name, skip) {
       listPost.respond({
         name: name,
         cards: []
@@ -38,6 +38,29 @@ describe('Scrumboard', function() {
       return list;
     }
 
+    function postCard(listName, cardTitle) {
+      cardPost.respond({
+        title: cardTitle,
+        description: '',
+        list: listName
+      });
+      scope.addCard(listName, cardTitle);
+      httpMock.flush();
+
+    };
+
+    function putCard(card, newListName) {
+      cardPut.respond({
+        title: 'TDD AngularJS',
+        description: '',
+        list: 'Doing'
+      });
+
+      scope.moveCard(scope.lists[0].cards[0], 'Doing');
+      httpMock.flush();
+
+    };
+
     it('should show scrumboard in title', function() {
       expect(scope.title).toBe('Scrumboard');
     });
@@ -50,18 +73,18 @@ describe('Scrumboard', function() {
 
     });
 
-    describe('add list', function() {
+    describe('list manipulations', function() {
 
       it('should not be able to add list without a name', function() {
         spyOn(window, 'alert');
-        addList('');
+        postList('');
         expect(scope.lists.length).toBe(0);
         expect(window.alert).toHaveBeenCalledWith("Add name to your list");
       });
 
-      it('should have one list', function() {
+      it('should have one list after add', function() {
         httpMock.expectPOST('/api/lists');
-        addList('TODO');
+        postList('TODO');
 
         expect(scope.lists.length).toBe(1);
         expect(scope.lists[0].name).toBe('TODO');
@@ -72,25 +95,23 @@ describe('Scrumboard', function() {
       it('should not be able to add list with same name twice', function() {
         httpMock.expectPOST('/api/lists');
         spyOn(window, 'alert');
-        addList('duplicate list');
-        addList('duplicate list', true);
+        postList('duplicate list');
+        postList('duplicate list', true/*skip post*/);
         expect(scope.lists.length).toBe(1);
         expect(window.alert).toHaveBeenCalledWith("Can't add duplicate");
 
       });
 
-      it('should add two lists', function() {
+      it('should have two lists after adding two', function() {
         httpMock.expectPOST('/api/lists');
-        addList('TODO');
-        addList('Doing');
+        postList('TODO');
+        postList('Doing');
 
         expect(scope.lists.length).toBe(2);
       });
-    });
 
-    describe('delete list when one list exists', function() {
-      it('should have no list', function() {
-        var list = addList('TODO');
+      it('should have no list after delete', function() {
+        var list = postList('TODO');
 
         httpMock.expectDELETE('/api/lists/TODO');
         scope.deleteList(list);
@@ -98,89 +119,55 @@ describe('Scrumboard', function() {
         httpMock.flush();
 
         expect(scope.lists.length).toBe(0);
-
       });
     });
 
-    describe('adding and deleting cards', function() {
+    describe('card manipulations', function() {
 
       beforeEach(function() {
-        addList('TODO');
-        addList('Doing');
+        postList('TODO');
+        postList('Doing');
       });
 
-      it('should not be possible to give empty title', function() {
+      it('should not be possible to give card an empty title', function() {
         spyOn(window, 'alert');
 
         scope.addCard('TODO', '');
 
         expect(scope.lists[0].cards.length).toBe(0);
         expect(window.alert).toHaveBeenCalledWith("Add title to your card");
-
       });
 
-      it('should have card inside list', function() {
+      it('should add card', function() {
         httpMock.expectPOST('/api/cards');
-        cardPost.respond({
-          title: 'TDD AngularJS',
-          description: '',
-          list: 'TODO'
-        });
-        scope.addCard('TODO', 'TDD AngularJS');
-        httpMock.flush();
+        postCard('TODO', 'TDD AngularJS');
 
         expect(scope.lists[0].cards.length).toBe(1);
         expect(scope.lists[0].cards[0].title).toBe('TDD AngularJS');
         expect(scope.lists[0].cards[0].list).toBe('TODO');
-
       });
 
       it('should delete card', function() {
-        httpMock.expectPOST('/api/cards');
-        cardPost.respond({
-          title: 'TDD AngularJS',
-          description: '',
-          list: 'TODO'
-        });
-        scope.addCard(scope.lists[0].name, 'TDD AngularJS');
-        httpMock.flush();
+        postCard('TODO', 'TDD AngularJS');
 
         httpMock.expectDELETE('/api/cards/TDD AngularJS');
         scope.deleteCard(scope.lists[0].cards[0]);
         httpMock.flush();
 
         expect(scope.lists[0].cards.length).toBe(0);
+      });
 
+      it('should move card to another list', function() {
+        postCard('TODO', 'TDD AngularJS');
+
+        httpMock.expectPUT('/api/cards/TDD AngularJS');
+
+        putCard(scope.lists[0].cards[0], 'Doing');
+
+        expect(scope.lists[0].cards.length).toBe(0);
+        expect(scope.lists[1].cards.length).toBe(1);
+        expect(scope.lists[1].cards[0].list).toBe('Doing');
       });
     });
-
-  describe('moving cards', function() {
-    it('card should be moved to other list', function() {
-      addList('TODO');
-      addList('Doing');
-      cardPost.respond({
-        title: 'TDD AngularJS',
-        description: '',
-        list: 'TODO'
-      });
-      scope.addCard('TODO', 'TDD AngularJS');
-      httpMock.flush();
-
-      cardPut.respond({
-        title: 'TDD AngularJS',
-        description: '',
-        list: 'Doing'
-      });
-
-      httpMock.expectPUT('/api/cards/TDD AngularJS');
-      scope.moveCard(scope.lists[0].cards[0], 'Doing');
-      httpMock.flush();
-
-      expect(scope.lists[0].cards.length).toBe(0);
-      expect(scope.lists[1].cards.length).toBe(1);
-      expect(scope.lists[1].cards[0].list).toBe('Doing');
-    });
-  });
-
   });
 });
