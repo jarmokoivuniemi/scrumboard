@@ -4,7 +4,7 @@ describe('Scrumboard', function() {
 
   describe('scrumboard', function() {
 
-    var ctrl, scope, httpMock, listPost, cardPost;
+    var ctrl, scope, httpMock, listPost, cardPost, cardPut;
 
     beforeEach(inject(function($controller, $rootScope, $httpBackend) {
       scope = $rootScope.$new();
@@ -16,6 +16,7 @@ describe('Scrumboard', function() {
       httpMock.when('DELETE', '/api/lists/TODO').respond({});
       cardPost = httpMock.when('POST', '/api/cards');
       httpMock.when('DELETE', '/api/cards/TDD AngularJS').respond({});
+      cardPut = httpMock.when('PUT', '/api/cards/TDD AngularJS');
 
     }));
 
@@ -154,12 +155,26 @@ describe('Scrumboard', function() {
     });
 
   describe('moving cards', function() {
-    xit('card should be moved to other list', function() {
+    it('card should be moved to other list', function() {
       addList('TODO');
       addList('Doing');
+      cardPost.respond({
+        title: 'TDD AngularJS',
+        description: '',
+        list: 'TODO'
+      });
       scope.addCard('TODO', 'TDD AngularJS');
+      httpMock.flush();
 
+      cardPut.respond({
+        title: 'TDD AngularJS',
+        description: '',
+        list: 'Doing'
+      });
+
+      httpMock.expectPUT('/api/cards/TDD AngularJS');
       scope.moveCard(scope.lists[0].cards[0], 'Doing');
+      httpMock.flush();
 
       expect(scope.lists[0].cards.length).toBe(0);
       expect(scope.lists[1].cards.length).toBe(1);

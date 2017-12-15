@@ -64,17 +64,29 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
 
   $scope.deleteCard = function(card) {
     $http.delete('/api/cards/'+card.title).then(function() {
-      var listIndex = getListIndexByName(card.list);
-      var cardIndex = $scope.lists[listIndex].cards.indexOf(card);
-      $scope.lists[listIndex].cards.splice(cardIndex, 1);
+      removeCardFromList(card);
     });
   };
 
   $scope.moveCard = function(card, listName) {
-    $scope.deleteCard(card);
-    card.list = listName;
-    var index = getListIndexByName(listName);
-    $scope.lists[index].cards.push(card);
+    editedCard = {
+      title: card.title,
+      description: card.description,
+      list: listName
+    }
+
+    $http.put('/api/cards/'+card.title, editedCard).then(function() {
+      removeCardFromList(card);
+      card.list = listName;
+      var index = getListIndexByName(listName);
+      $scope.lists[index].cards.push(card);
+    });
+  };
+
+  function removeCardFromList(card) {
+    var listIndex = getListIndexByName(card.list);
+    var cardIndex = $scope.lists[listIndex].cards.indexOf(card);
+    $scope.lists[listIndex].cards.splice(cardIndex, 1);
   };
 
   function getListIndex(list) {
