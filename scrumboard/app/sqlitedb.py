@@ -9,7 +9,7 @@ class SQLiteDB:
         cards = Set('Card')
 
     class Card(db.Entity):
-        title = Required(str)
+        title = PrimaryKey(str)
         description = Required(str)
         list = Required('List')
 
@@ -24,7 +24,11 @@ class SQLiteDB:
     @db_session
     def get_lists(self):
         result = select(l for l in self.List)
-        return [{'name': l.name, 'cards': l.cards} for l in result]
+        return [
+            {'name': l.name, 'cards': [
+            {'title': c.title, 'description': c.description, 'list': c.list.name} 
+            for c in l.cards ]} 
+            for l in result]
 
     @db_session
     def drop_all(self):
@@ -42,5 +46,14 @@ class SQLiteDB:
     def get_cards_by_list(self, list_name):
         result = select(c for c in self.Card if c.list.name == list_name)
         return [{'title': c.title, 'description': c.description, 'list': c.list.name} for c in result]
+
+    @db_session
+    def delete_card(self, card_title):
+        delete(c for c in self.Card if c.title == card_title)
+
+    @db_session
+    def move_card(self, card):
+        c = self.Card[card['title']]
+        c.list = self.List[card['list']]
 
 
