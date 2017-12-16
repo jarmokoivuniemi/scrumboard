@@ -1,4 +1,4 @@
-from pony.orm import Database, Required, Set, db_session, select, delete, PrimaryKey
+from pony.orm import Database, Required, Set, db_session, select, delete, PrimaryKey, Optional
 from pony.orm.serialization import to_dict
 
 class SQLiteDB:
@@ -10,7 +10,7 @@ class SQLiteDB:
 
     class Card(db.Entity):
         title = PrimaryKey(str)
-        description = Required(str)
+        description = Optional(str)
         list = Required('List')
 
     def __init__(self, db_name):

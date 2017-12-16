@@ -1,9 +1,8 @@
 from flask import Flask, render_template, jsonify, request, abort
 from database import Database
-from flask_sqlalchemy import SQLAlchemy
+from sqlitedb import SQLiteDB
 import json
 
-sql = SQLAlchemy()
 
 def create_app(db):
 
@@ -41,6 +40,7 @@ def create_app(db):
 
     @app.route('/api/cards', methods=['POST'])
     def post_card():
+        print(request.get_json())
         db.add_card(request.get_json())
         return jsonify(request.get_json())
 
@@ -65,4 +65,4 @@ def create_app(db):
 
 
 if __name__ == '__main__':
-    create_app(Database()).run(debug=True)
+    create_app(SQLiteDB('test.db')).run(debug=True)
