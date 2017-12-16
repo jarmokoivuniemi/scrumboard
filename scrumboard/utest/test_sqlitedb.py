@@ -33,14 +33,14 @@ class TestSQLiteDB(TestCase):
         self.add_list_to_db(self.sample_list1)
 
         assert_true('List name' in [l['name'] for l in db.get_lists()], 
-                'then added list should be in database')
+                'then added list is in database')
 
     def test_given_one_list_in_db_when_delete_list(self):
         self.add_list_to_db(self.sample_list1)
 
         db.delete_list('List name')
 
-        assert_equal(0, len(db.get_lists()), 'then database should have no lists')
+        assert_equal(0, len(db.get_lists()), 'then database has no lists')
 
     def test_given_list_exists_when_add_card_to_list(self):
         self.add_list_to_db(self.sample_list1)
@@ -48,7 +48,7 @@ class TestSQLiteDB(TestCase):
         self.add_card_to_list(self.sample_card1)
 
         assert_equal([self.sample_card1], db.get_cards_by_list('List name'), 
-                'then added card should be on that list')
+                'then added card is added to that list')
 
     def test_given_list_has_one_card_when_delete_card(self):
         self.add_list_to_db(self.sample_list1)
@@ -75,9 +75,9 @@ class TestSQLiteDB(TestCase):
         db.move_card(modified_card)
 
         assert_equal('Card title', db.get_lists()[1]['cards'][0]['title'],
-                'then card should be moved to new list')
+                'then card is moved to new list')
         assert_equal(0, len(db.get_lists()[0]['cards']),
-                'then card should be removed from old list')
+                'then card is removed from old list')
     
     def test_list_with_card(self):
         self.add_list_to_db(self.sample_list1)

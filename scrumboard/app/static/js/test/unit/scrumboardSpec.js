@@ -61,7 +61,7 @@ describe('Scrumboard', function() {
 
     };
 
-    it('should show scrumboard in title', function() {
+    it('shows scrumboard in title', function() {
       expect(scope.title).toBe('Scrumboard');
     });
 
@@ -75,14 +75,14 @@ describe('Scrumboard', function() {
 
     describe('list manipulations', function() {
 
-      it('should not be able to add list without a name', function() {
+      it('is not possible to add a list without a name', function() {
         spyOn(window, 'alert');
         addList('');
         expect(scope.lists.length).toBe(0);
         expect(window.alert).toHaveBeenCalledWith("Add name to your list");
       });
 
-      it('should have one list after add', function() {
+      it('has one list after list is added', function() {
         httpMock.expectPOST('/api/lists');
         addList('TODO');
 
@@ -92,7 +92,7 @@ describe('Scrumboard', function() {
 
       });
 
-      it('should not be able to add list with same name twice', function() {
+      it('is not possible to add duplicate list', function() {
         httpMock.expectPOST('/api/lists');
         spyOn(window, 'alert');
         addList('duplicate list');
@@ -102,7 +102,7 @@ describe('Scrumboard', function() {
 
       });
 
-      it('should have two lists after adding two', function() {
+      it('has two lists after adding two', function() {
         httpMock.expectPOST('/api/lists');
         addList('TODO');
         addList('Doing');
@@ -110,7 +110,7 @@ describe('Scrumboard', function() {
         expect(scope.lists.length).toBe(2);
       });
 
-      it('should have no list after delete', function() {
+      it('has no lists after deleting', function() {
         var list = addList('TODO');
 
         httpMock.expectDELETE('/api/lists/TODO');
@@ -129,7 +129,7 @@ describe('Scrumboard', function() {
         addList('Doing');
       });
 
-      it('should not be possible to give card an empty title', function() {
+      it('is not possible to add a card with empty title', function() {
         spyOn(window, 'alert');
 
         scope.addCard('TODO', '');
@@ -138,7 +138,7 @@ describe('Scrumboard', function() {
         expect(window.alert).toHaveBeenCalledWith("Add title to your card");
       });
 
-      it('should add card', function() {
+      it('adds card to list', function() {
         httpMock.expectPOST('/api/cards');
         addCardToList('TODO', 'TDD AngularJS');
 
@@ -147,7 +147,7 @@ describe('Scrumboard', function() {
         expect(scope.lists[0].cards[0].list).toBe('TODO');
       });
 
-      it('should delete card', function() {
+      it('deletes card from list', function() {
         addCardToList('TODO', 'TDD AngularJS');
 
         httpMock.expectDELETE('/api/cards/TDD AngularJS');
@@ -157,7 +157,7 @@ describe('Scrumboard', function() {
         expect(scope.lists[0].cards.length).toBe(0);
       });
 
-      it('should move card to another list', function() {
+      it('moves card to another list', function() {
         addCardToList('TODO', 'TDD AngularJS');
 
         httpMock.expectPUT('/api/cards/TDD AngularJS');

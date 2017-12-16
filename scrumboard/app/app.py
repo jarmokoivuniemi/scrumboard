@@ -6,7 +6,6 @@ import json
 
 def create_app(db):
 
-
     app = Flask(__name__)
 
     @app.route('/')
@@ -40,7 +39,6 @@ def create_app(db):
 
     @app.route('/api/cards', methods=['POST'])
     def post_card():
-        print(request.get_json())
         db.add_card(request.get_json())
         return jsonify(request.get_json())
 
