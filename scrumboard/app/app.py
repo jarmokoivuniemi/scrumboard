@@ -1,11 +1,15 @@
 from flask import Flask, render_template, jsonify, request, abort
 from database import Database
+from flask_sqlalchemy import SQLAlchemy
 import json
 
+sql = SQLAlchemy()
 
 def create_app(db):
 
+
     app = Flask(__name__)
+
     @app.route('/')
     def index():
         return render_template('index.html')

@@ -72,6 +72,7 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
 
     $http.put('/api/cards/'+card.title, editedCard).then(function() {
       removeCardFromList(card);
+      console.log($scope.lists);
       card.list = listName;
       var index = getListIndexByName(listName);
       $scope.lists[index].cards.push(card);
