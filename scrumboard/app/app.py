@@ -1,5 +1,4 @@
 from flask import Flask, render_template, jsonify, request, abort
-from database import Database
 from sqlitedb import SQLiteDB
 import json
 

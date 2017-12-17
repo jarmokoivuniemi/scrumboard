@@ -1,8 +1,7 @@
 from unittest import TestCase, SkipTest
 from app.sqlitedb import SQLiteDB
+from utest.in_memory_db import db
 from nose.tools import assert_equal, assert_true, assert_in, assert_not_in
-
-db = SQLiteDB(':memory:')
 
 class TestSQLiteDB(TestCase):
 

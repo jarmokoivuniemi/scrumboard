@@ -24,11 +24,7 @@ class SQLiteDB:
     @db_session
     def get_lists(self):
         result = select(l for l in self.List)
-        return [
-            {'name': l.name, 'cards': [
-            {'title': c.title, 'description': c.description, 'list': c.list.name} 
-            for c in l.cards ]} 
-            for l in result]
+        return [ {'name': l.name, 'cards': self._cards_for_list(l)} for l in result]
 
     @db_session
     def drop_all(self):
@@ -56,4 +52,12 @@ class SQLiteDB:
         c = self.Card[card['title']]
         c.list = self.List[card['list']]
 
+    @db_session
+    def find_list_by_name(self, list_name):
+        l = self.List[list_name]
+        return {'name': l.name, 'cards': 
+                self._cards_for_list(l)}
+
+    def _cards_for_list(self, l):
+        return [{'title': c.title, 'description': c.description, 'list': c.list.name} for c in l.cards]
 
