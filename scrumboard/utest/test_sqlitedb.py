@@ -85,6 +85,17 @@ class TestSQLiteDB(TestCase):
 
         assert_equal('Card title', db.get_lists()[0]['cards'][0]['title'])
 
+    def test_change_card_title(self):
+        self.add_list_to_db(self.sample_list1)
+        
+        self.add_card_to_list(self.sample_card1)
+
+        modified_card = {
+                'title': 'Card title',
+                'description': 'Card description',
+                'list': 'Another list',
+                }
+
 
 
 

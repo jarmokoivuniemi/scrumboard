@@ -23,8 +23,8 @@ class SQLiteDB:
 
     @db_session
     def get_lists(self):
-        result = select(l for l in self.List)
-        return [ {'name': l.name, 'cards': self._cards_for_list(l)} for l in result]
+        lists = select(l for l in self.List)
+        return [{'name': l.name, 'cards': self._cards_for_list(l)} for l in lists]
 
     @db_session
     def drop_all(self):
@@ -40,8 +40,8 @@ class SQLiteDB:
 
     @db_session
     def get_cards_by_list(self, list_name):
-        result = select(c for c in self.Card if c.list.name == list_name)
-        return [{'title': c.title, 'description': c.description, 'list': c.list.name} for c in result]
+        cards = select(c for c in self.Card if c.list.name == list_name)
+        return [{'title': c.title, 'description': c.description, 'list': c.list.name} for c in cards]
 
     @db_session
     def delete_card(self, card_title):

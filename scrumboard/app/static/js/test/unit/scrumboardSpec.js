@@ -65,19 +65,13 @@ describe('Scrumboard', function() {
       expect(scope.title).toBe('Scrumboard');
     });
 
-
-    describe('no lists nor cards are added', function() {
-      it('should have no lists', function() {
-        expect(scope.lists.length).toBe(0);
-      });
-
-    });
-
     describe('list manipulations', function() {
 
       it('is not possible to add a list without a name', function() {
         spyOn(window, 'alert');
+
         addList('');
+
         expect(scope.lists.length).toBe(0);
         expect(window.alert).toHaveBeenCalledWith("Add name to your list");
       });
@@ -95,8 +89,10 @@ describe('Scrumboard', function() {
       it('is not possible to add duplicate list', function() {
         httpMock.expectPOST('/api/lists');
         spyOn(window, 'alert');
+
         addList('duplicate list');
         addList('duplicate list', true/*skip post*/);
+
         expect(scope.lists.length).toBe(1);
         expect(window.alert).toHaveBeenCalledWith("Can't add duplicate");
 
