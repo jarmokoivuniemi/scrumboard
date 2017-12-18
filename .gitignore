@@ -8,6 +8,7 @@ __pycache__/
 *.pyc
 *.db
 lib/
+node_modules/
 bin/
 geckodriver.log
 tags
