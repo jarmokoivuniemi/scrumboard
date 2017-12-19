@@ -89,7 +89,7 @@ scrumboardApp.controller('scrumboardController', function($rootScope, $scope, $h
   };
 
   function getListIndexByName(listName) {
-    return $scope.lists.indexOf($scope.lists.filter(list => list.name == listName)[0]);
+    return $scope.lists.indexOf($scope.lists.find(list => list.name == listName));
   };
 
   function listExists() {
